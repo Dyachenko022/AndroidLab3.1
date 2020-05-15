@@ -12,7 +12,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Students1 (" +
+        db.execSQL("CREATE TABLE Students (" +
+                "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "FullName TEXT," +
+                "AddingDate TEXT);");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("CREATE TABLE Students1 (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "LastName TEXT," +
                 "FirstName TEXT," +
@@ -20,9 +28,5 @@ public class DBHelper extends SQLiteOpenHelper {
                 "AddingDate TEXT);");
         db.execSQL("DROP TABLE Students;");
         db.execSQL("ALTER TABLE Students1 RENAME TO Students;");
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 }

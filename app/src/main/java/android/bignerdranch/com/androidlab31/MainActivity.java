@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,34 +18,30 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase database;
     RecyclerView recyclerView;
     StudentAdapter studentAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DBHelper helper = new DBHelper(getApplicationContext());
-        database = helper.getWritableDatabase();
-        database.delete("Students", null, null);
-        final Random random = new Random();
-        for(int i = 0; i < 5; i++) {
-            ContentValues values = new ContentValues();
-            values.put("FullName", random.nextInt());
-            values.put("AddingDate", Calendar.getInstance().getTime().toString());
-            database.insert("Students", null, values);
-        }
+        DBHelper helper = new DBHelper(getApplicationContext(), 2);
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         studentAdapter = new StudentAdapter(getApplicationContext());
         recyclerView.setAdapter(studentAdapter);
         repository = StudentRepository.createInstance(getApplicationContext());
+        database = helper.getWritableDatabase();
+        final Random random = new Random();
         Button addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ContentValues values = new ContentValues();
-                values.put("FullName", random.nextInt());
+                values.put("FirstName", random.nextInt());
+                values.put("LastName", random.nextInt());
+                values.put("MiddleName", random.nextInt());
                 values.put("AddingDate", Calendar.getInstance().getTime().toString());
                 database.insert("Students", null, values);
-                repository.notifyDBChanged();
+                repository.updateRepository();
                 studentAdapter.notifyDataSetChanged();
             }
         });
@@ -55,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ContentValues values = new ContentValues();
-                values.put("FullName", "Иванов Иван Иваныч");
+                values.put("FirstName", "Иван");
+                values.put("LastName", "Иванов");
+                values.put("MiddleName", "Иванович");
                 String selection = "ID = " + repository.getStudents()
                         .get(repository.getStudents().size() - 1).getId();
                 database.update("Students", values, selection, null);
-                repository.notifyDBChanged();
+                repository.updateRepository();
                 studentAdapter.notifyDataSetChanged();
             }
         });

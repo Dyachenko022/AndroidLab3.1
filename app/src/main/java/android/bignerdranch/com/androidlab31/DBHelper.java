@@ -6,16 +6,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
-    public DBHelper(@Nullable Context context) {
-        super(context, "Students.db", null, 1);
+    public DBHelper(Context context, int version) {
+        super(context,"Students.db" ,null, version);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Students (" +
+        db.execSQL("CREATE TABLE Students1 (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "FullName TEXT," +
+                "LastName TEXT," +
+                "FirstName TEXT," +
+                "MiddleName TEXT," +
                 "AddingDate TEXT);");
+        db.execSQL("DROP TABLE Students;");
+        db.execSQL("ALTER TABLE Students1 RENAME TO Students;");
     }
 
     @Override

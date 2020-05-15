@@ -27,7 +27,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
         Student student = repository.getStudents().get(position);
         holder.addingDate.setText(student.getAddingDate());
-        holder.fullName.setText(student.getFullName());
+        holder.fullName.setText(student.toString());
     }
 
     @Override
